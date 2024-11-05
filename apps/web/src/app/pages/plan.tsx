@@ -108,23 +108,8 @@ export function PlanPage() {
 			})} each ${plan.frequency} ${plan.frequency_type}`}</p>
 
 			<div className="max-w-lg">
-				{/* <CardPayment
-					initialization={{ amount: plan.transaction_amount }}
-					customization={{
-						paymentMethods: {
-							maxInstallments: plan.frequency,
-							minInstallments: 1,
-							types: {
-								excluded: ['debit_card'],
-							},
-						},
-					}}
-					onSubmit={handleSubmit}
-				/> */}
-
 				<CardPayment
 					key={plan.id}
-					locale="pt-BR"
 					initialization={initialization}
 					customization={customization}
 					onSubmit={onSubmit}

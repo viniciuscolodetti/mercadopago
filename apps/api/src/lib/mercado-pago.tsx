@@ -62,12 +62,6 @@ const mp_createSubscription = async (
 				card_token_id: cardTokenId,
 				payer_email: emailClient,
 				status: 'authorized',
-				auto_recurring: {
-					frequency: 1,
-					frequency_type: 'months',
-					transaction_amount: 60,
-					currency_id: 'BRL',
-				},
 			},
 		})
 		return subscriptionResponse.id
