@@ -1,10 +1,16 @@
-import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
+import { Button } from './components/ui/button'
 
 function App() {
 	return (
-		<div className="w-screen h-screen flex items-center justify-center flex-col space-y-2">
-			<h1>Hello turbo repo</h1>
-			<Button>Click me</Button>
+		<div className="p-4 space-y-4">
+			<h1 className="text-3xl font-semibold">Dashboard</h1>
+
+			<div>
+				<Link to="/plans">
+					<Button>Planos</Button>
+				</Link>
+			</div>
 		</div>
 	)
 }

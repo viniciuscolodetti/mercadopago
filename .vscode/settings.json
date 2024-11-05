@@ -1,4 +1,9 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "biomejs.biome",
+  "cSpell.words": [
+    "idempotency",
+    "mercadopago",
+    "preapproval"
+  ],
 }
