@@ -1,9 +1,9 @@
 import { MercadoPagoConfig, PreApprovalPlan, PreApproval } from 'mercadopago'
+import { mpAccessToken, mpBackUlr } from '../env'
 
 // Configuração das credenciais
 const client = new MercadoPagoConfig({
-	accessToken:
-		'APP_USR-1863376364359728-110510-d4a385963dbe1f8014592bbc8bebabea-2076967451',
+	accessToken: mpAccessToken,
 	options: { timeout: 5000, idempotencyKey: 'abc' },
 })
 
@@ -26,7 +26,7 @@ const mp_createPlan = async (
 					transaction_amount: amount,
 					currency_id: 'BRL',
 				},
-				back_url: 'https://fivehundred-api.bramagran.com.br',
+				back_url: `${mpBackUlr}/verify-subscription`,
 			},
 		})
 		return planResponse.id // ID do plano para uso nas assinaturas
@@ -77,12 +77,12 @@ const mp_createPendingSubscription = async (payer_email: string) => {
 			body: {
 				payer_email,
 				status: 'pending',
-				back_url: 'https://mercadopago-swart.vercel.app/',
-				reason: 'Teste por Link',
+				back_url: `${mpBackUlr}/verify-subscription`,
+				reason: 'Teste por Link - Vercel',
 				auto_recurring: {
 					frequency: 12,
 					frequency_type: 'months',
-					transaction_amount: 20,
+					transaction_amount: 540,
 					currency_id: 'BRL',
 				},
 			},

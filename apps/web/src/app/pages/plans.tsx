@@ -6,7 +6,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import { useEffect, useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 
 export type Plan = {
@@ -23,6 +25,8 @@ type Response = {
 
 export function PlansPage() {
 	const [plans, setPlans] = useState<Plan[]>()
+	const [payerEmail, setPayerEmail] = useState('')
+	const [formError, setFormError] = useState(false)
 
 	useEffect(() => {
 		async function fetchData() {
@@ -40,9 +44,18 @@ export function PlansPage() {
 		fetchData()
 	}, [])
 
-	const handleCreateLink = async () => {
+	const handleCreateLink = async (event: FormEvent) => {
+		event.preventDefault()
+
+		if (!payerEmail) {
+			setFormError(true)
+			return
+		}
+
+		setFormError(false)
+
 		const data = {
-			payerEmail: 'test_user_195249839@testuser.com',
+			payerEmail,
 		}
 
 		const response = await fetch(
@@ -69,11 +82,11 @@ export function PlansPage() {
 		<div className="p-4 space-y-4">
 			<h1 className="text-3xl font-semibold">Planos</h1>
 
-			<div className="flex space-x-4 items-center">
+			<div className="flex space-x-4">
 				{plans.map(plan => {
 					return (
-						<Card key={plan.id} className="w-96">
-							<CardHeader>
+						<Card key={plan.id} className="w-96 justify-between flex flex-col">
+							<CardHeader className="flex-1">
 								<CardTitle>{plan.reason}</CardTitle>
 								<CardDescription>
 									{`
@@ -86,18 +99,46 @@ export function PlansPage() {
 										`}
 								</CardDescription>
 							</CardHeader>
-							<CardContent className="space-x-2">
+							<CardContent>
 								<Link to={`/plans/${plan.id}`}>
 									<Button>Assinar</Button>
 								</Link>
-
-								<Button onClick={handleCreateLink} variant="outline">
-									Link
-								</Button>
 							</CardContent>
 						</Card>
 					)
 				})}
+
+				<Card className="w-96">
+					<CardHeader>
+						<CardTitle>Teste por Link - Vercel</CardTitle>
+						<CardDescription>
+							{`
+										${(500).toLocaleString('pt-br', {
+											style: 'currency',
+											currency: 'BRL',
+										})}
+										each 12 months						
+										`}
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<form onSubmit={handleCreateLink} className="space-y-2">
+							<Label htmlFor="email">E-mail</Label>
+							<Input
+								name="email"
+								type="email"
+								placeholder="test_user_XXXXXXXXX@testuser.com"
+								value={payerEmail}
+								onChange={input => setPayerEmail(input.currentTarget.value)}
+								data-error={formError}
+								className="data-[error=true]:border-rose-500"
+							/>
+							<Button type="submit" variant="outline">
+								Assinar
+							</Button>
+						</form>
+					</CardContent>
+				</Card>
 			</div>
 		</div>
 	)

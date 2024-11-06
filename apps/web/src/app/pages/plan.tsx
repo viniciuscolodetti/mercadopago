@@ -13,7 +13,7 @@ type PlanParams = {
 	planId: string
 }
 
-initMercadoPago('APP_USR-c74f2f46-7652-4190-9218-3199b9391136', {
+initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY, {
 	locale: 'pt-BR',
 })
 

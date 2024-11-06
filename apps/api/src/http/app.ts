@@ -12,6 +12,7 @@ import {
 
 import { errorHandler } from './error-handler'
 import { appRoutes } from './routes'
+import { jwtSecret } from '../env'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -41,7 +42,7 @@ app.register(fastifySwaggerUI, {
 })
 
 app.register(fastifyJwt, {
-	secret: 'my-app-secret',
+	secret: jwtSecret,
 })
 
 app.setSerializerCompiler(serializerCompiler)
