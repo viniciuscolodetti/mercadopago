@@ -23,8 +23,6 @@ export function SubscriptionPage() {
 			}),
 		})
 
-		console.log(response)
-
 		// const data = await response.json()
 		// onSubscriptionCreated(data.subscriptionId)
 	}

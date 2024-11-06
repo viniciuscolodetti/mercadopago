@@ -71,4 +71,40 @@ const mp_createSubscription = async (
 	}
 }
 
-export { mp_createPlan, mp_createSubscription, mp_searchPlans, mp_getPlan }
+const mp_createPendingSubscription = async (payer_email: string) => {
+	try {
+		const subscriptionResponse = await preApproval.create({
+			body: {
+				payer_email,
+				status: 'pending',
+				back_url: 'https://fivehundred-api.bramagran.com.br',
+				reason: 'Teste por Link',
+				auto_recurring: {
+					frequency: 12,
+					frequency_type: 'months',
+					transaction_amount: 20,
+					currency_id: 'BRL',
+				},
+			},
+		})
+
+		return subscriptionResponse.init_point
+	} catch (error) {
+		console.error('Erro ao criar assinatura pendente:', error)
+		throw error
+	}
+}
+
+const mp_getSubscription = async (subscriptionId: string) => {
+	const subscription = await preApproval.get({ id: subscriptionId })
+	return subscription
+}
+
+export {
+	mp_createPlan,
+	mp_createSubscription,
+	mp_searchPlans,
+	mp_getPlan,
+	mp_createPendingSubscription,
+	mp_getSubscription,
+}

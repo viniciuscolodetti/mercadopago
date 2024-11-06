@@ -37,6 +37,24 @@ export function PlansPage() {
 		fetchData()
 	}, [])
 
+	const handleCreateLink = async () => {
+		const data = {
+			payerEmail: 'test_user_195249839@testuser.com',
+		}
+
+		const response = await fetch('http://localhost:3333/subscriptions/link', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(data),
+		}).then(response => response.json())
+
+		const { url } = response
+
+		if (!url) return
+
+		window.location.href = url
+	}
+
 	if (!plans) {
 		return <div className="p-4">Carregando..</div>
 	}
@@ -62,10 +80,14 @@ export function PlansPage() {
 										`}
 								</CardDescription>
 							</CardHeader>
-							<CardContent>
+							<CardContent className="space-x-2">
 								<Link to={`/plans/${plan.id}`}>
 									<Button>Assinar</Button>
 								</Link>
+
+								<Button onClick={handleCreateLink} variant="outline">
+									Link
+								</Button>
 							</CardContent>
 						</Card>
 					)
