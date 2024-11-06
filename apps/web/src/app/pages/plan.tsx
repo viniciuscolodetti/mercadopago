@@ -51,7 +51,7 @@ export function PlanPage() {
 	}
 
 	const handleGoHome = () => {
-		window.cardPaymentBrickController.unmount()
+		window.cardPaymentBrickController?.unmount()
 		navigate('/')
 	}
 
