@@ -1,6 +1,20 @@
 import { app } from './app'
+import * as dotenv from 'dotenv'
 
-const port = 3333
+dotenv.config({
+	path:
+		process.env.NODE_ENV === 'production'
+			? '.env.production'
+			: '.env.development',
+})
+
+const apiPort: string | undefined = process.env.SERVER_PORT
+
+if (!apiPort) {
+	throw new Error('As variáveis de ambiente SERVER_PORT devem estar definidas.')
+}
+
+const port = Number(process.env.SERVER_PORT)
 const host = '0.0.0.0'
 
 app

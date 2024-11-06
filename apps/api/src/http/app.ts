@@ -41,7 +41,7 @@ app.register(fastifySwaggerUI, {
 })
 
 app.register(fastifyJwt, {
-	secret: process.env.JW_SECRET || 'my-app-secret',
+	secret: process.env.JWT_SECRET || 'my-app-secret',
 })
 
 app.setSerializerCompiler(serializerCompiler)
