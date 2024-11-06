@@ -31,7 +31,7 @@ export function PlanPage() {
 	useEffect(() => {
 		async function fetchData() {
 			const response: Plan = await fetch(
-				`http://localhost:3333/plans/${planId}`,
+				`${import.meta.env.VITE_API_URL}/plans/${planId}`,
 				{
 					method: 'GET',
 					headers: { 'Content-Type': 'application/json' },
@@ -71,7 +71,7 @@ export function PlanPage() {
 	) => {
 		try {
 			if (!formData.token) return
-			await fetch('http://localhost:3333/subscriptions', {
+			await fetch(`${import.meta.env.VITE_API_URL}/subscriptions`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({

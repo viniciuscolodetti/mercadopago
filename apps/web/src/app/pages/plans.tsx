@@ -26,10 +26,13 @@ export function PlansPage() {
 
 	useEffect(() => {
 		async function fetchData() {
-			const response: Response = await fetch('http://localhost:3333/plans', {
-				method: 'GET',
-				headers: { 'Content-Type': 'application/json' },
-			}).then(response => response.json())
+			const response: Response = await fetch(
+				`${import.meta.env.VITE_API_URL}/plans`,
+				{
+					method: 'GET',
+					headers: { 'Content-Type': 'application/json' },
+				}
+			).then(response => response.json())
 
 			setPlans(response.plans)
 		}
@@ -42,11 +45,14 @@ export function PlansPage() {
 			payerEmail: 'test_user_195249839@testuser.com',
 		}
 
-		const response = await fetch('http://localhost:3333/subscriptions/link', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(data),
-		}).then(response => response.json())
+		const response = await fetch(
+			`${import.meta.env.VITE_API_URL}/subscriptions/link`,
+			{
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data),
+			}
+		).then(response => response.json())
 
 		const { url } = response
 

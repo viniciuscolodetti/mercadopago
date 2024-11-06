@@ -8,7 +8,7 @@ export function VerifySubscription() {
 	useEffect(() => {
 		async function fetchData() {
 			const response = await fetch(
-				`http://localhost:3333/subscriptions/${subscriptionId}`,
+				`${import.meta.env.VITE_API_URL}/subscriptions/${subscriptionId}`,
 				{
 					method: 'GET',
 					headers: { 'Content-Type': 'application/json' },
