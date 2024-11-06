@@ -6,9 +6,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export type Plan = {
@@ -25,8 +23,6 @@ type Response = {
 
 export function PlansPage() {
 	const [plans, setPlans] = useState<Plan[]>()
-	const [payerEmail, setPayerEmail] = useState('')
-	const [formError, setFormError] = useState(false)
 
 	useEffect(() => {
 		async function fetchData() {
@@ -44,26 +40,12 @@ export function PlansPage() {
 		fetchData()
 	}, [])
 
-	const handleCreateLink = async (event: FormEvent) => {
-		event.preventDefault()
-
-		if (!payerEmail) {
-			setFormError(true)
-			return
-		}
-
-		setFormError(false)
-
-		const data = {
-			payerEmail,
-		}
-
+	const handleCreateLink = async () => {
 		const response = await fetch(
 			`${import.meta.env.VITE_API_URL}/subscriptions/link`,
 			{
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(data),
 			}
 		).then(response => response.json())
 
@@ -113,7 +95,7 @@ export function PlansPage() {
 						<CardTitle>Teste por Link - Vercel</CardTitle>
 						<CardDescription>
 							{`
-										${(500).toLocaleString('pt-br', {
+										${(564).toLocaleString('pt-br', {
 											style: 'currency',
 											currency: 'BRL',
 										})}
@@ -122,21 +104,9 @@ export function PlansPage() {
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<form onSubmit={handleCreateLink} className="space-y-2">
-							<Label htmlFor="email">E-mail</Label>
-							<Input
-								name="email"
-								type="email"
-								placeholder="test_user_XXXXXXXXX@testuser.com"
-								value={payerEmail}
-								onChange={input => setPayerEmail(input.currentTarget.value)}
-								data-error={formError}
-								className="data-[error=true]:border-rose-500"
-							/>
-							<Button type="submit" variant="outline">
-								Assinar
-							</Button>
-						</form>
+						<Button onClick={handleCreateLink} variant="outline">
+							Assinar
+						</Button>
 					</CardContent>
 				</Card>
 			</div>

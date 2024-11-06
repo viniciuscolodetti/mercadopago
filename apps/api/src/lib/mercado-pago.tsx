@@ -1,4 +1,11 @@
-import { MercadoPagoConfig, PreApprovalPlan, PreApproval } from 'mercadopago'
+import {
+	MercadoPagoConfig,
+	PreApprovalPlan,
+	PreApproval,
+	Preference,
+	Payment,
+} from 'mercadopago'
+import { v4 as uuidv4 } from 'uuid'
 import { mpAccessToken, mpBackUlr } from '../env'
 
 // Configuração das credenciais
@@ -9,6 +16,8 @@ const client = new MercadoPagoConfig({
 
 const preApprovalPlan = new PreApprovalPlan(client)
 const preApproval = new PreApproval(client)
+const preference = new Preference(client)
+const payment = new Payment(client)
 
 // Criação de um Plano de Assinatura
 const mp_createPlan = async (
@@ -100,6 +109,74 @@ const mp_getSubscription = async (subscriptionId: string) => {
 	return subscription
 }
 
+const subscriptions: string[] = ['8eb847d8-5732-45ac-9981-46f013b20c7e']
+
+function formatDateToISOString(date: Date) {
+	const year = date.getFullYear()
+	const month = String(date.getMonth() + 1).padStart(2, '0') // getMonth() é 0-indexado
+	const day = String(date.getDate()).padStart(2, '0')
+	const hours = String(date.getHours()).padStart(2, '0')
+	const minutes = String(date.getMinutes()).padStart(2, '0')
+	const seconds = String(date.getSeconds()).padStart(2, '0')
+	const timezoneOffset = -date.getTimezoneOffset()
+	const sign = timezoneOffset >= 0 ? '+' : '-'
+	const offsetHours = String(
+		Math.floor(Math.abs(timezoneOffset) / 60)
+	).padStart(2, '0')
+	const offsetMinutes = String(Math.abs(timezoneOffset) % 60).padStart(2, '0')
+
+	return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${sign}${offsetHours}:${offsetMinutes}`
+}
+
+const mp_createPreference = async () => {
+	const planId = uuidv4()
+	subscriptions.push(planId)
+
+	const expiresDate = new Date()
+	expiresDate.setMinutes(expiresDate.getMinutes() + 30)
+
+	const data = await preference.create({
+		body: {
+			items: [
+				{
+					id: 'plan01',
+					title: 'Teste Plano 01',
+					quantity: 1,
+					unit_price: 564,
+					currency_id: 'BRL',
+				},
+			],
+			payment_methods: {
+				installments: 12,
+			},
+			back_urls: {
+				success: 'https://mercadopago-swart.vercel.app/verify-subscription',
+			},
+			auto_return: 'approved',
+			expires: true,
+			expiration_date_to: formatDateToISOString(expiresDate),
+			marketplace: 'asset-design',
+			external_reference: planId,
+		},
+	})
+
+	console.log(data.init_point)
+
+	return data.init_point
+}
+
+const mp_verifyPayment = async (paymentId: number, planId: string) => {
+	const checkPlanExists = subscriptions.includes(planId)
+
+	if (!checkPlanExists) {
+		throw new Error('Plan does not exists')
+	}
+
+	const checkPayment = await payment.get({ id: paymentId })
+
+	return checkPayment
+}
+
 export {
 	mp_createPlan,
 	mp_createSubscription,
@@ -107,4 +184,6 @@ export {
 	mp_getPlan,
 	mp_createPendingSubscription,
 	mp_getSubscription,
+	mp_createPreference,
+	mp_verifyPayment,
 }

@@ -1,32 +1,34 @@
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { mp_getSubscription } from '../../../lib/mercado-pago'
+import { mp_verifyPayment } from '../../../lib/mercado-pago'
 
 export async function getSubscription(app: FastifyInstance) {
 	app.withTypeProvider<ZodTypeProvider>().get(
-		'/subscriptions/:subscriptionId',
+		'/subscriptions/:planId',
 		{
 			schema: {
 				tags: ['subscriptions'],
 				summary: 'Get a subscription details route',
 				params: z.object({
-					subscriptionId: z.string(),
+					planId: z.string(),
+				}),
+				querystring: z.object({
+					paymentId: z.coerce.number(),
 				}),
 			},
 		},
 		async (request, reply) => {
-			const { subscriptionId } = request.params
+			const { planId } = request.params
+			const { paymentId } = request.query
 
 			try {
-				const subscription = await mp_getSubscription(subscriptionId)
+				const payment = await mp_verifyPayment(paymentId, planId)
 
-				if (!subscription) throw new Error('Subscription not found.')
-
-				if (subscription.status !== 'authorized')
+				if (payment.status !== 'approved')
 					throw new Error('Subscription not authorized')
 
-				reply.status(200).send({ status: subscription.status })
+				reply.status(200).send({ status: payment.status })
 			} catch (error) {
 				reply.status(500).send({ message: 'Erro ao listar plano', error })
 			}

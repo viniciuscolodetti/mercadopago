@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react'
 export function VerifySubscription() {
 	const [status, setStatus] = useState('pending')
 	const params = new URLSearchParams(location.search)
-	const subscriptionId = params.get('preapproval_id')
+	const planId = params.get('external_reference')
+	const paymentId = params.get('payment_id')
 
 	useEffect(() => {
 		async function fetchData() {
 			const response = await fetch(
-				`${import.meta.env.VITE_API_URL}/subscriptions/${subscriptionId}`,
+				`${import.meta.env.VITE_API_URL}/subscriptions/${planId}?paymentId=${paymentId}`,
 				{
 					method: 'GET',
 					headers: { 'Content-Type': 'application/json' },
@@ -18,8 +19,8 @@ export function VerifySubscription() {
 			setStatus(response.status)
 		}
 
-		if (subscriptionId) fetchData()
-	}, [subscriptionId])
+		if (planId && paymentId) fetchData()
+	}, [planId, paymentId])
 
 	return (
 		<div className="p-4 space-y-4">
