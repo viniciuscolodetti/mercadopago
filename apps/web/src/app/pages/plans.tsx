@@ -45,7 +45,6 @@ export function PlansPage() {
 			`${import.meta.env.VITE_API_URL}/subscriptions/link`,
 			{
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
 			}
 		).then(response => response.json())
 
