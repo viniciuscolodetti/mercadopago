@@ -77,7 +77,7 @@ const mp_createPendingSubscription = async (payer_email: string) => {
 			body: {
 				payer_email,
 				status: 'pending',
-				back_url: 'https://fivehundred-api.bramagran.com.br',
+				back_url: 'https://mercadopago-swart.vercel.app/',
 				reason: 'Teste por Link',
 				auto_recurring: {
 					frequency: 12,
